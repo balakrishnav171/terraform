@@ -27,3 +27,20 @@ Resources included:
 - `terraform.tfvars`, `.terraform/`, and local state files are ignored so secrets and state do not get pushed.
 - The SQL admin password is generated automatically and exposed as a sensitive Terraform output.
 - Restrict `allowed_ssh_cidr` before deploying this outside a demo environment.
+
+## GitHub Actions
+
+The repository includes a workflow at `.github/workflows/terraform.yml`.
+
+Add these GitHub repository secrets before using the workflow:
+
+- `AZURE_CLIENT_ID`
+- `AZURE_TENANT_ID`
+- `AZURE_SUBSCRIPTION_ID`
+- `TF_VAR_VM_ADMIN_SSH_PUBLIC_KEY`
+
+The workflow:
+
+- Runs `terraform fmt`, `terraform init`, and `terraform validate` on pull requests and pushes to `main`
+- Runs `terraform plan` when Azure credentials and the SSH public key secret are configured
+- Runs `terraform apply` only through manual `workflow_dispatch` when you choose `apply=true`
